@@ -15,6 +15,8 @@ int main (int argc, char **argv)
   args::ArgumentParser argparser("asciify: Convert an image to ascii art");
   args::HelpFlag help(argparser, "help", "Print this help", {'h', "help"});
   args::Positional<std::string> arg_path(argparser, "image", "Path to image file");
+  args::ValueFlag<int> arg_rows(argparser, "rows", "Number of rows", {'r', "rows"});
+  args::ValueFlag<int> arg_cols(argparser, "cols", "Number of cols", {'c', "cols"});
   try{
       argparser.ParseCLI(argc, argv);
   } catch (args::Help){
@@ -32,8 +34,8 @@ int main (int argc, char **argv)
   }
 
   // rows : cols == canny_image.rows : canny_image.cols
-  auto rows = 5;
-  auto cols = 5;
+  auto rows = arg_rows ? args::get(arg_rows) : 5;
+  auto cols = arg_cols ? args::get(arg_cols) : 5;
   auto path = args::get(arg_path);
   std::string space = " ";
 
