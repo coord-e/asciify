@@ -8,10 +8,26 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+#include <args.hxx>
+
 int main (int argc, char **argv)
 {
-  if(argc != 2){
-    std::cerr << "Supply filename" << std::endl;
+  args::ArgumentParser argparser("asciify: Convert an image to ascii art");
+  args::HelpFlag help(argparser, "help", "Print this help", {'h', "help"});
+  args::Positional<std::string> image_path(argparser, "image", "Path to image file");
+  try{
+      argparser.ParseCLI(argc, argv);
+  } catch (args::Help){
+      std::cout << argparser;
+      return 0;
+  } catch (args::ParseError e){
+      std::cerr << e.what() << std::endl;
+      std::cerr << argparser;
+      return -1;
+  }
+  if(!image_path){
+    std::cerr << "Specify a path to image file." << std::endl;
+    std::cerr << argparser;
     return -1;
   }
 
@@ -24,9 +40,9 @@ int main (int argc, char **argv)
   auto ocr = cv::text::OCRTesseract::create("/usr/share/tessdata", "eng", "!'()*+,-./:;<=>[\\]_{|}~«°»", cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
   //auto ocr = cv::text::OCRTesseract::create("/usr/share/tessdata", "eng", "#-/\\(){}^<>._|°", cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
 
-  auto raw_image = cv::imread(argv[1], 0);
+  auto raw_image = cv::imread(args::get(image_path), 0);
   if(!raw_image.data){
-    std::cerr << "Failed to load supplied image: " << argv[1] << std::endl;
+    std::cerr << "Failed to load supplied image: " << args::get(image_path) << std::endl;
     return -1;
   }
 
