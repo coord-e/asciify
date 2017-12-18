@@ -54,7 +54,13 @@ int main (int argc, char **argv)
   auto const charset = arg_charset ? args::get(arg_charset) : "!'()*+,-./:;<=>[\\]_{|}~«°»";
   bool const verbose = arg_verbose;
 
-  auto ocr = cv::text::OCRTesseract::create(tessdata.c_str(), lang.c_str(), charset.c_str(), cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
+  cv::Ptr<cv::text::OCRTesseract> ocr;
+  try{
+    ocr = cv::text::OCRTesseract::create(tessdata.c_str(), lang.c_str(), charset.c_str(), cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
+  }catch(int err){
+    std::cerr << "Failed to initialize tesseract. (" << err << ')' << std::endl;
+    return -1;
+  }
 
   auto raw_image = cv::imread(path, 0);
   if(!raw_image.data){
@@ -63,7 +69,13 @@ int main (int argc, char **argv)
   }
 
   cv::Mat canny_image;
-	cv::Canny(raw_image, canny_image, th1, th2, aps, l2);
+  try{
+	   cv::Canny(raw_image, canny_image, th1, th2, aps, l2);
+  }catch(cv::Exception& ex){
+    std::cerr << "Failed to apply edge detection." << std::endl;
+    std::cerr << ex.what() << std::endl;
+    return -1;
+  }
 
   int cn = std::floor(canny_image.cols / cols) * cols;
   int rn = std::floor(canny_image.rows / rows) * rows;
@@ -76,7 +88,13 @@ int main (int argc, char **argv)
   }
 
   cv::Mat src_image;
-  cv::resize(canny_image, src_image, cv::Size(cn, rn));
+  try{
+    cv::resize(canny_image, src_image, cv::Size(cn, rn));
+  }catch(cv::Exception& ex){
+   std::cerr << "Failed to resize image." << std::endl;
+   std::cerr << ex.what() << std::endl;
+   return -1;
+  }
 
   std::stringstream result;
   for(int y = 0; y < src_image.rows; y+=rows){
