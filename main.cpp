@@ -14,7 +14,7 @@ int main (int argc, char **argv)
 {
   args::ArgumentParser argparser("asciify: Convert an image to ascii art");
   args::HelpFlag help(argparser, "help", "Print this help", {'h', "help"});
-  args::Positional<std::string> image_path(argparser, "image", "Path to image file");
+  args::Positional<std::string> arg_path(argparser, "image", "Path to image file");
   try{
       argparser.ParseCLI(argc, argv);
   } catch (args::Help){
@@ -25,24 +25,24 @@ int main (int argc, char **argv)
       std::cerr << argparser;
       return -1;
   }
-  if(!image_path){
+  if(!arg_path){
     std::cerr << "Specify a path to image file." << std::endl;
     std::cerr << argparser;
     return -1;
   }
 
-  // Will be specified by cmdline options...
   // rows : cols == canny_image.rows : canny_image.cols
   auto rows = 5;
   auto cols = 5;
+  auto path = args::get(arg_path);
   std::string space = " ";
 
   auto ocr = cv::text::OCRTesseract::create("/usr/share/tessdata", "eng", "!'()*+,-./:;<=>[\\]_{|}~«°»", cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
   //auto ocr = cv::text::OCRTesseract::create("/usr/share/tessdata", "eng", "#-/\\(){}^<>._|°", cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
 
-  auto raw_image = cv::imread(args::get(image_path), 0);
+  auto raw_image = cv::imread(path, 0);
   if(!raw_image.data){
-    std::cerr << "Failed to load supplied image: " << args::get(image_path) << std::endl;
+    std::cerr << "Failed to load supplied image: " << path << std::endl;
     return -1;
   }
 
