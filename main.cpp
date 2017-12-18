@@ -24,6 +24,7 @@ int main (int argc, char **argv)
   args::ValueFlag<std::string> arg_tessdata(argparser, "tessdata", "Path to tessdata directory", {'t', "tessdata"});
   args::ValueFlag<std::string> arg_lang(argparser, "language", "Language to use in tesseract", {'l', "lang"});
   args::ValueFlag<std::string> arg_charset(argparser, "charset", "charset to use in tesseract", {"charset"});
+  args::Flag arg_verbose(argparser, "verbose", "Print verbose output and show images in process", {'v', "verbose"});
   try{
       argparser.ParseCLI(argc, argv);
   } catch (args::Help){
@@ -51,6 +52,7 @@ int main (int argc, char **argv)
   auto const tessdata = arg_tessdata ? args::get(arg_tessdata) : "/usr/share/tessdata";
   auto const lang = arg_lang ? args::get(arg_lang) : "eng";
   auto const charset = arg_charset ? args::get(arg_charset) : "!'()*+,-./:;<=>[\\]_{|}~«°»";
+  bool const verbose = arg_verbose;
   std::string space = " ";
 
   auto ocr = cv::text::OCRTesseract::create(tessdata.c_str(), lang.c_str(), charset.c_str(), cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
@@ -69,8 +71,11 @@ int main (int argc, char **argv)
   int rn = std::floor(canny_image.rows / rows) * rows;
   assert(!(rn % rows || cn % cols));
 
-  // cv::imshow("Canny", canny_image);
-  // cv::waitKey(0);
+  if(verbose){
+    std::cerr << "Resized image: " << rn << 'x' << cn << std::endl;
+    cv::imshow("Canny", canny_image);
+    cv::waitKey(0);
+  }
 
   cv::Mat src_image;
   cv::resize(canny_image, src_image, cv::Size(cn, rn));
