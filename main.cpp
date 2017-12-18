@@ -112,4 +112,6 @@ int main (int argc, char **argv)
   std::copy(std::istreambuf_iterator<char>(result),
              std::istreambuf_iterator<char>(),
              std::ostreambuf_iterator<char>(std::cout));
+
+  return 0;
 }
