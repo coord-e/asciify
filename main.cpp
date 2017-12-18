@@ -1,6 +1,7 @@
 #include <iostream>
 #include <numeric>
 #include <algorithm>
+#include <sstream>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/text.hpp>
@@ -46,6 +47,7 @@ int main (int argc, char **argv)
   cv::Mat src_image;
   cv::resize(canny_image, src_image, cv::Size(cn, rn));
 
+  std::stringstream result;
   for(int y = 0; y < src_image.rows; y+=rows){
     for(int x = 0; x < src_image.cols; x+=cols){
       auto part_image = src_image(cv::Rect(x, y, cols, rows));
@@ -53,9 +55,12 @@ int main (int argc, char **argv)
       std::string text;
       ocr->run(part_image, text);
       text.erase(std::remove(text.begin(), text.end(), '\n'), text.end());
-      std::cout << (text.empty() || text == " " ? space : text);
+      result << (text.empty() || text == " " ? space : text);
     }
-    std::cout << std::endl;
+    result << std::endl;
   }
 
+  std::copy(std::istreambuf_iterator<char>(result),
+             std::istreambuf_iterator<char>(),
+             std::ostreambuf_iterator<char>(std::cout));
 }
