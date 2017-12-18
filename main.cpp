@@ -15,15 +15,15 @@ int main (int argc, char **argv)
   args::ArgumentParser argparser("asciify: Convert an image to ascii art");
   args::HelpFlag help(argparser, "help", "Print this help", {'h', "help"});
   args::Positional<std::string> arg_path(argparser, "image", "Path to image file");
-  args::ValueFlag<int> arg_rows(argparser, "rows", "Number of rows", {'r', "rows"});
-  args::ValueFlag<int> arg_cols(argparser, "cols", "Number of cols", {'c', "cols"});
-  args::ValueFlag<double> arg_threshold1(argparser, "threshold1", "threshold1 of Canny edge detector", {"th1"});
-  args::ValueFlag<double> arg_threshold2(argparser, "threshold2", "threshold2 of Canny edge detector", {"th2"});
-  args::ValueFlag<int> arg_aperturesize(argparser, "apertureSize", "apertureSize of Canny edge detector", {"apsize"});
+  args::ValueFlag<int> arg_rows(argparser, "rows", "Number of rows (=5)", {'r', "rows"});
+  args::ValueFlag<int> arg_cols(argparser, "cols", "Number of cols (=5)", {'c', "cols"});
+  args::ValueFlag<double> arg_threshold1(argparser, "threshold1", "threshold1 of Canny edge detector (=50)", {"th1"});
+  args::ValueFlag<double> arg_threshold2(argparser, "threshold2", "threshold2 of Canny edge detector (=200)", {"th2"});
+  args::ValueFlag<int> arg_aperturesize(argparser, "apertureSize", "apertureSize of Canny edge detector (=3)", {"apsize"});
   args::Flag arg_l2gradient(argparser, "L2gradient", "Whether use L2gradient in Canny edge detector", {"l2grad"});
-  args::ValueFlag<std::string> arg_tessdata(argparser, "tessdata", "Path to tessdata directory", {'t', "tessdata"});
-  args::ValueFlag<std::string> arg_lang(argparser, "language", "Language to use in tesseract", {'l', "lang"});
-  args::ValueFlag<std::string> arg_charset(argparser, "charset", "charset to use in tesseract", {"charset"});
+  args::ValueFlag<std::string> arg_tessdata(argparser, "tessdata", "Path to tessdata directory (=/usr/share/tessdata)", {'t', "tessdata"});
+  args::ValueFlag<std::string> arg_lang(argparser, "language", "Language to use in tesseract (=eng)", {'l', "lang"});
+  args::ValueFlag<std::string> arg_charset(argparser, "charset", "charset to use in tesseract (=!'()*+,-./:;<=>[\\]_{|}~«°»)", {"charset"});
   args::Flag arg_verbose(argparser, "verbose", "Print verbose output and show images in process", {'v', "verbose"});
   try{
       argparser.ParseCLI(argc, argv);
