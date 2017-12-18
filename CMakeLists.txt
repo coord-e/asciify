@@ -15,8 +15,4 @@ find_package(OpenCV REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(asciify_bin main.cpp)
-set_target_properties(asciify_bin PROPERTIES OUTPUT_NAME asciify)
-target_link_libraries(asciify_bin ${OpenCV_LIBS})
-
-install(TARGETS asciify_bin RUNTIME DESTINATION bin)
+add_subdirectory(src)
