@@ -21,6 +21,9 @@ int main (int argc, char **argv)
   args::ValueFlag<double> arg_threshold2(argparser, "threshold2", "threshold2 of Canny edge detector", {"th2"});
   args::ValueFlag<int> arg_aperturesize(argparser, "apertureSize", "apertureSize of Canny edge detector", {"apsize"});
   args::Flag arg_l2gradient(argparser, "L2gradient", "Whether use L2gradient in Canny edge detector", {"l2grad"});
+  args::ValueFlag<std::string> arg_tessdata(argparser, "tessdata", "Path to tessdata directory", {'t', "tessdata"});
+  args::ValueFlag<std::string> arg_lang(argparser, "language", "Language to use in tesseract", {'l', "lang"});
+  args::ValueFlag<std::string> arg_charset(argparser, "charset", "charset to use in tesseract", {"charset"});
   try{
       argparser.ParseCLI(argc, argv);
   } catch (args::Help){
@@ -45,9 +48,12 @@ int main (int argc, char **argv)
   auto th2 = arg_threshold2 ? args::get(arg_threshold2) : 200;
   auto aps = arg_aperturesize ? args::get(arg_aperturesize) : 3;
   bool l2 = arg_l2gradient;
+  auto tessdata = arg_tessdata ? args::get(arg_tessdata) : "/usr/share/tessdata";
+  auto lang = arg_lang ? args::get(arg_lang) : "eng";
+  auto charset = arg_charset ? args::get(arg_charset) : "!'()*+,-./:;<=>[\\]_{|}~«°»";
   std::string space = " ";
 
-  auto ocr = cv::text::OCRTesseract::create("/usr/share/tessdata", "eng", "!'()*+,-./:;<=>[\\]_{|}~«°»", cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
+  auto ocr = cv::text::OCRTesseract::create(tessdata.c_str(), lang.c_str(), charset.c_str(), cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
   //auto ocr = cv::text::OCRTesseract::create("/usr/share/tessdata", "eng", "#-/\\(){}^<>._|°", cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
 
   auto raw_image = cv::imread(path, 0);
