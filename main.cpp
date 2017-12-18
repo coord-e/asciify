@@ -17,6 +17,10 @@ int main (int argc, char **argv)
   args::Positional<std::string> arg_path(argparser, "image", "Path to image file");
   args::ValueFlag<int> arg_rows(argparser, "rows", "Number of rows", {'r', "rows"});
   args::ValueFlag<int> arg_cols(argparser, "cols", "Number of cols", {'c', "cols"});
+  args::ValueFlag<double> arg_threshold1(argparser, "threshold1", "threshold1 of Canny edge detector", {"th1"});
+  args::ValueFlag<double> arg_threshold2(argparser, "threshold2", "threshold2 of Canny edge detector", {"th2"});
+  args::ValueFlag<int> arg_aperturesize(argparser, "apertureSize", "apertureSize of Canny edge detector", {"apsize"});
+  args::Flag arg_l2gradient(argparser, "L2gradient", "Whether use L2gradient in Canny edge detector", {"l2grad"});
   try{
       argparser.ParseCLI(argc, argv);
   } catch (args::Help){
@@ -37,6 +41,10 @@ int main (int argc, char **argv)
   auto rows = arg_rows ? args::get(arg_rows) : 5;
   auto cols = arg_cols ? args::get(arg_cols) : 5;
   auto path = args::get(arg_path);
+  auto th1 = arg_threshold1 ? args::get(arg_threshold1) : 50;
+  auto th2 = arg_threshold2 ? args::get(arg_threshold2) : 200;
+  auto aps = arg_aperturesize ? args::get(arg_aperturesize) : 3;
+  bool l2 = arg_l2gradient;
   std::string space = " ";
 
   auto ocr = cv::text::OCRTesseract::create("/usr/share/tessdata", "eng", "!'()*+,-./:;<=>[\\]_{|}~«°»", cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
@@ -49,7 +57,7 @@ int main (int argc, char **argv)
   }
 
   cv::Mat canny_image;
-	cv::Canny(raw_image, canny_image, 50, 200);
+	cv::Canny(raw_image, canny_image, th1, th2, aps, l2);
 
   if(rows / cols != canny_image.rows / canny_image.cols){
     std::cerr << "Image ratios are different: " << static_cast<float>(rows) / cols << " vs " << static_cast<float>(canny_image.rows) / canny_image.cols << std::endl;
