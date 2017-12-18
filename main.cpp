@@ -65,10 +65,6 @@ int main (int argc, char **argv)
   cv::Mat canny_image;
 	cv::Canny(raw_image, canny_image, th1, th2, aps, l2);
 
-  if(rows / cols != canny_image.rows / canny_image.cols){
-    std::cerr << "Image ratios are different: " << static_cast<float>(rows) / cols << " vs " << static_cast<float>(canny_image.rows) / canny_image.cols << std::endl;
-    return -1;
-  }
   int cn = std::floor(canny_image.cols / cols) * cols;
   int rn = std::floor(canny_image.rows / rows) * rows;
   assert(!(rn % rows || cn % cols));
