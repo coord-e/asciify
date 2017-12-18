@@ -41,16 +41,16 @@ int main (int argc, char **argv)
   }
 
   // rows : cols == canny_image.rows : canny_image.cols
-  auto rows = arg_rows ? args::get(arg_rows) : 5;
-  auto cols = arg_cols ? args::get(arg_cols) : 5;
-  auto path = args::get(arg_path);
-  auto th1 = arg_threshold1 ? args::get(arg_threshold1) : 50;
-  auto th2 = arg_threshold2 ? args::get(arg_threshold2) : 200;
-  auto aps = arg_aperturesize ? args::get(arg_aperturesize) : 3;
-  bool l2 = arg_l2gradient;
-  auto tessdata = arg_tessdata ? args::get(arg_tessdata) : "/usr/share/tessdata";
-  auto lang = arg_lang ? args::get(arg_lang) : "eng";
-  auto charset = arg_charset ? args::get(arg_charset) : "!'()*+,-./:;<=>[\\]_{|}~«°»";
+  auto const rows = arg_rows ? args::get(arg_rows) : 5;
+  auto const cols = arg_cols ? args::get(arg_cols) : 5;
+  auto const path = args::get(arg_path);
+  auto const th1 = arg_threshold1 ? args::get(arg_threshold1) : 50;
+  auto const th2 = arg_threshold2 ? args::get(arg_threshold2) : 200;
+  auto const aps = arg_aperturesize ? args::get(arg_aperturesize) : 3;
+  bool const l2 = arg_l2gradient;
+  auto const tessdata = arg_tessdata ? args::get(arg_tessdata) : "/usr/share/tessdata";
+  auto const lang = arg_lang ? args::get(arg_lang) : "eng";
+  auto const charset = arg_charset ? args::get(arg_charset) : "!'()*+,-./:;<=>[\\]_{|}~«°»";
   std::string space = " ";
 
   auto ocr = cv::text::OCRTesseract::create(tessdata.c_str(), lang.c_str(), charset.c_str(), cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
