@@ -14,15 +14,6 @@ endif()
 find_package(OpenCV REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
-link_directories(/usr/local/lib64)
-
-add_executable(edge_bin edge.cpp)
-set_target_properties(edge_bin PROPERTIES OUTPUT_NAME edge)
-target_link_libraries(edge_bin ${OpenCV_LIBS})
-
-add_executable(ocr_bin ocr.cpp)
-set_target_properties(ocr_bin PROPERTIES OUTPUT_NAME ocr)
-target_link_libraries(ocr_bin ${OpenCV_LIBS} -lopencv_text)
 
 add_executable(asciify_bin main.cpp)
 set_target_properties(asciify_bin PROPERTIES OUTPUT_NAME asciify)

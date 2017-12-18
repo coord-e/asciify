@@ -53,10 +53,8 @@ int main (int argc, char **argv)
   auto const lang = arg_lang ? args::get(arg_lang) : "eng";
   auto const charset = arg_charset ? args::get(arg_charset) : "!'()*+,-./:;<=>[\\]_{|}~«°»";
   bool const verbose = arg_verbose;
-  std::string space = " ";
 
   auto ocr = cv::text::OCRTesseract::create(tessdata.c_str(), lang.c_str(), charset.c_str(), cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
-  //auto ocr = cv::text::OCRTesseract::create("/usr/share/tessdata", "eng", "#-/\\(){}^<>._|°", cv::text::OEM_DEFAULT,  cv::text::PSM_SINGLE_CHAR);
 
   auto raw_image = cv::imread(path, 0);
   if(!raw_image.data){
@@ -88,7 +86,7 @@ int main (int argc, char **argv)
       std::string text;
       ocr->run(part_image, text);
       text.erase(std::remove(text.begin(), text.end(), '\n'), text.end());
-      result << (text.empty() || text == " " ? space : text);
+      result << (text.empty() ? " " : text);
     }
     result << std::endl;
   }
